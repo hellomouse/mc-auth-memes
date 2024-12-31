@@ -1,0 +1,11 @@
+{
+  "package": "net.hellomouse.authmemes.mixin",
+  "required": true,
+  "mixins": [
+    "ServerLoginPacketListenerImplMixin",
+    "GameProfileCacheMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
