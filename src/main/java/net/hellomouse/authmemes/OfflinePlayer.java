@@ -1,5 +1,7 @@
 package net.hellomouse.authmemes;
 
+import net.minecraft.util.StringUtil;
+
 import java.util.ArrayList;
 
 public record OfflinePlayer(String username, ArrayList<SubnetInfo> allowedIps) {
@@ -10,6 +12,9 @@ public record OfflinePlayer(String username, ArrayList<SubnetInfo> allowedIps) {
         }
 
         String username = split1[0];
+        if (!StringUtil.isValidPlayerName(username)) {
+            throw new IllegalArgumentException("invalid username");
+        }
         String addresses_str = split1[1];
 
         var subnetsStr = addresses_str.split(",");

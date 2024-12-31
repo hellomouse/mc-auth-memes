@@ -3,6 +3,7 @@ package net.hellomouse.authmemes;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -34,8 +35,8 @@ public class Config {
 
     static final ModConfigSpec SPEC = BUILDER.build();
 
-    public static boolean enable;
-    public static HashMap<String, OfflinePlayer> offlinePlayers;
+    public static boolean enable = false;
+    public static HashMap<String, OfflinePlayer> offlinePlayers = new HashMap<>();
 
     private static boolean validateOfflinePlayerEntry(final Object obj) {
         if (obj instanceof String entry) {
@@ -51,7 +52,7 @@ public class Config {
     }
 
     @SubscribeEvent
-    static void onLoad(final ModConfigEvent event)
+    static synchronized void onLoad(final ModConfigEvent event)
     {
         enable = ENABLED.get();
         offlinePlayers.clear();
@@ -59,10 +60,31 @@ public class Config {
             try {
                 var entry = OfflinePlayer.parseConfigLine(entryStr);
                 var key = entry.username().toLowerCase();
+                if (offlinePlayers.containsKey(key)) {
+                    LOGGER.warn("duplicate username {}, ignoring", entry.username());
+                    continue;
+                }
                 offlinePlayers.put(key, entry);
+                // TODO: might need to update the profile cache
             } catch (IllegalArgumentException e) {
                 LOGGER.warn("invalid entry in offline_players, ignoring", e);
             }
+        }
+
+        LOGGER.info("configuration reloaded");
+    }
+
+    public static synchronized Optional<OfflinePlayer> lookupUsername(String username) {
+        if (!enable) {
+            return Optional.empty();
+        }
+
+        var key = username.toLowerCase();
+        var entry = offlinePlayers.get(key);
+        if (entry == null) {
+            return Optional.empty();
+        } else {
+            return Optional.of(entry);
         }
     }
 }

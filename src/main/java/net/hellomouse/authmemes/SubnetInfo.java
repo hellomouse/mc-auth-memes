@@ -34,6 +34,11 @@ public class SubnetInfo {
         return new SubnetInfo(address, cidr);
     }
 
+    @Override
+    public String toString() {
+        return this.address.toString() + "/" + this.cidr;
+    }
+
     public boolean matches(SocketAddress saddr) {
         Objects.requireNonNull(saddr);
         if (saddr instanceof InetSocketAddress saddrInet) {

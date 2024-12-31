@@ -1,12 +1,16 @@
 package net.hellomouse.authmemes;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/neoforge.mods.toml file
@@ -38,5 +42,18 @@ public class AuthMemes
     {
         // Some common setup code
         LOGGER.info("Hello, world!");
+    }
+
+    @SubscribeEvent
+    public void registerCommands(RegisterCommandsEvent event) {
+        // TODO
+    }
+
+    @SubscribeEvent
+    public void onServerStarted(ServerStartedEvent event) {
+        if (Config.enable && !event.getServer().usesAuthentication()) {
+            LOGGER.warn("{} is enabled but server is running in offline mode", MODID);
+            LOGGER.warn("This is most likely not what you want!");
+        }
     }
 }
