@@ -20,8 +20,8 @@ public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     private static final ModConfigSpec.BooleanValue ENABLED = BUILDER
-        .comment("Global enable for auth bypass functionality")
-        .define("enable", true);
+        .comment("Global enable for selective auth bypass functionality")
+        .define("enable", false);
 
     // a list of strings that are treated as resource locations for items
     private static final ModConfigSpec.ConfigValue<List<? extends String>> OFFLINE_PLAYERS = BUILDER
