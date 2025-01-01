@@ -2,7 +2,6 @@ package net.hellomouse.authmemes.mixin;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.logging.LogUtils;
-import net.hellomouse.authmemes.AuthMemes;
 import net.hellomouse.authmemes.Config;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -20,8 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ServerLoginPacketListenerImpl.class)
 public class ServerLoginPacketListenerImplMixin {
-    @Unique
-    private static final Logger LOGGER = LogUtils.getLogger();
+    @Unique private static final Logger LOGGER = LogUtils.getLogger();
 
     @Shadow String requestedUsername;
     @Shadow @Final Connection connection;
@@ -55,11 +53,10 @@ public class ServerLoginPacketListenerImplMixin {
             }
         }
 
+        ci.cancel();
         if (!allowed) {
-            ci.cancel();
             this.disconnect(Component.literal("IP address mismatch"));
         } else {
-            ci.cancel();
             this.startClientVerification(UUIDUtil.createOfflineProfile(offlineEntry.username()));
         }
     }

@@ -1,6 +1,5 @@
 package net.hellomouse.authmemes.mixin;
 
-import com.llamalad7.mixinextras.sugar.Cancellable;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.GameProfileRepository;
 import net.hellomouse.authmemes.Config;
